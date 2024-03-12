@@ -2,9 +2,11 @@ package com.ggomezmorales.fundamentalsapp
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
@@ -16,11 +18,15 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+
+
         val buttonApply = findViewById<Button>(R.id.buttonApply)
         val textFirstName = findViewById<TextView>(R.id.textFirstName)
         val textLastName = findViewById<TextView>(R.id.textLastName)
         val textBirthday = findViewById<TextView>(R.id.textBirthday)
+        textBirthday.inputType = InputType.TYPE_CLASS_DATETIME
         val textCountry = findViewById<TextView>(R.id.textCountry)
+
         buttonApply.setOnClickListener {
             val firstName = textFirstName.text.toString()
             val lastName = textLastName.text.toString()
@@ -28,11 +34,21 @@ class MainActivity : AppCompatActivity() {
             val country = textCountry.text.toString()
         }
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
+        var count: Int = 0
+        val textCount = findViewById<TextView>(R.id.textCount)
+        val buttonCount = findViewById<Button>(R.id.buttonCount)
+        buttonCount.setOnClickListener {
+            count++
+            textCount.text = "Let's count together: ${count}"
+            Toast.makeText(this, "Update counter", Toast.LENGTH_SHORT).show()
+
+            val clToast = layoutInflater.inflate(R.layout.custom_toast, null)
+            Toast(this).apply {
+                duration = Toast.LENGTH_SHORT
+                view = clToast
+                show()
+            }
+        }
     }
 
     override fun onStart() {
