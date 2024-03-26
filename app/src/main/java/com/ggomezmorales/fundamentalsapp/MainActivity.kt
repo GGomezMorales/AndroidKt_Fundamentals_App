@@ -1,6 +1,7 @@
 package com.ggomezmorales.fundamentalsapp
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -18,8 +19,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-
-
         val buttonApply = findViewById<Button>(R.id.buttonApply)
         val textFirstName = findViewById<TextView>(R.id.textFirstName)
         val textLastName = findViewById<TextView>(R.id.textLastName)
@@ -32,9 +31,16 @@ class MainActivity : AppCompatActivity() {
             val lastName = textLastName.text.toString()
             val birthday = textBirthday.text.toString()
             val country = textCountry.text.toString()
+
+            val person = Person(firstName, lastName, birthday, country)
+
+            Intent(this, FourthActivity::class.java).also {
+                it.putExtra("EXTRA_PERSON_DATA", person)
+                startActivity(it)
+            }
         }
 
-        var count: Int = 0
+        var count = 0
         val textCount = findViewById<TextView>(R.id.textCount)
         val buttonCount = findViewById<Button>(R.id.buttonCount)
         buttonCount.setOnClickListener {
@@ -47,6 +53,13 @@ class MainActivity : AppCompatActivity() {
                 duration = Toast.LENGTH_SHORT
                 view = clToast
                 show()
+            }
+        }
+
+        val buttonOpenActivity = findViewById<Button>(R.id.buttonOpenActivity)
+        buttonOpenActivity.setOnClickListener {
+            Intent(this, SecondActivity::class.java).also {
+                startActivity(it)
             }
         }
     }
