@@ -11,7 +11,7 @@
         android:id="@+id/dataPerson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SecondActivity"
+        android:text="Data"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
