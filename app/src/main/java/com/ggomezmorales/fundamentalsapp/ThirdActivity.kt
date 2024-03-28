@@ -1,6 +1,7 @@
 package com.ggomezmorales.fundamentalsapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,13 @@ class ThirdActivity : AppCompatActivity() {
         val buttonRequestPermissions = findViewById<Button>(R.id.buttonRequestPermissions)
         buttonRequestPermissions.setOnClickListener {
             requestPermissions()
+        }
+
+        val buttonMenu = findViewById<Button>(R.id.buttonMenu)
+        buttonMenu.setOnClickListener {
+            Intent(this, FitthActivity::class.java).also {
+                startActivity(it)
+            }
         }
 
     }
