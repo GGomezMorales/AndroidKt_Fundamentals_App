@@ -2,6 +2,7 @@ package com.ggomezmorales.fundamentalsapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -26,11 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
-        val buttonRequestPermissions = findViewById<Button>(R.id.buttonRequestPermissions1)
-        buttonRequestPermissions.setOnClickListener {
-            this.requestPermissions()
-        }
 
         val buttonApply = findViewById<Button>(R.id.buttonApply)
         val textFirstName = findViewById<TextView>(R.id.textFirstName)
@@ -75,6 +72,24 @@ class MainActivity : AppCompatActivity() {
                 startActivity(it)
             }
         }
+
+        val buttonTakePhoto = findViewById<Button>(R.id.buttonTakePhoto)
+        buttonTakePhoto.setOnClickListener {
+            Intent(Intent.ACTION_GET_CONTENT).also {
+                it.type = "image/*"
+                startActivityForResult(it, 0)
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 0) {
+            val uri = data?.data
+            val image = findViewById<ImageView>(R.id.ivPhoto)
+            image.setImageURI(uri)
+        }
     }
 
     override fun onStart() {
@@ -92,7 +107,6 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onPause")
     }
 
-
     override fun onRestart() {
         super.onRestart()
         Log.i(TAG, "onRestart")
@@ -106,63 +120,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "onDestroy")
-    }
-
-
-    private fun hasWriteExternalStoragePermission() =
-        ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-
-    private fun hasLocationForegroundPermission() =
-        ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-    @SuppressLint("InlinedApi")
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun hasLocationBackgroundPermission() =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            TODO("VERSION.SDK_INT < Q")
-        }
-
-    @SuppressLint("InlinedApi")
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun requestPermissions() {
-        val permissionToRequest = mutableListOf<String>()
-        if (!hasWriteExternalStoragePermission()) {
-            permissionToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        if (!hasLocationForegroundPermission()) {
-            permissionToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
-        if (!hasLocationBackgroundPermission()) {
-            permissionToRequest.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
-        if (permissionToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionToRequest.toTypedArray(), 0)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 0 && grantResults.isNotEmpty()) {
-            for (i in grantResults.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("PermissionsRequest", "$permissions[i] granted")
-                }
-            }
-        }
     }
 }
